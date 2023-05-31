@@ -1,0 +1,158 @@
+% Author     : C. Pierquet
+% licence    : Released under the LaTeX Project Public License v1.3c
+% or later, see http://www.latex-project.org/lppl.txtf
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{postit}[2023/05/31 0.1.0 Utiliser des post-it]
+%0.1.0	Version initiale
+
+%------Packages utiles
+\RequirePackage{tcolorbox}
+\RequirePackage{simplekv}
+\RequirePackage{xstring}
+%------Librairies
+\tcbuselibrary{skins}
+
+%------Clés
+\defKV[postit]{%
+	Largeur=\def\PostItLarg{#1},%
+	Couleur=\def\PostItCoul{#1},%
+	CouleurAttache=\def\PostItCoulClip{#1},%
+	EchelleAttache=\def\PostItCoulScaleClip{#1},%
+	Inclinaison=\def\PostItIncline{#1},%
+	Hauteur=\def\PostItHauteur{#1},%
+	DecalAttache=\def\PostItDeclClip{#1},%
+	Attache=\def\PostItDeco{#1},%
+	AlignementV=\def\PostItAlignV{#1},%
+	AlignementH=\def\PostItAlignH{#1},%
+	AlignementPostIt=\def\PostItAlignPostIt{#1}
+}
+
+\setKVdefault[postit]{%
+	Largeur=6cm,%
+	Couleur=yellow,%
+	CouleurAttache=red,%
+	Inclinaison=0,%
+	EchelleAttache=1,%
+	Ombre=true,%
+	Hauteur=auto,%
+	DecalAttache=0cm,%
+	Attache=Punaise,%
+	AlignementV=top,%
+	AlignementH=justify,%
+	AlignementPostIt=bottom,%
+	Bordure=true,%
+	Coin=false
+}
+
+%------Style principal tcolorbox
+\tcbset{testpostit/.style={%
+	on line,enhanced,colback=\PostItCoul!50,colframe=\PostItCoul!50!black,boxrule=\PostItBorder,width=\PostItLarg,sharp corners,halign=\PostItAlignH,valign=\PostItAlignV,%
+	finish={\CommandeDecoration},tikz={rotate=\PostItIncline,transform shape},%
+	box align=\PostItAlignPostIt,%
+	nobeforeafter
+	}%
+}
+
+%------Gestion du coin
+\NewDocumentCommand\CoinPostIt{ }{%
+	\path[line width=\PostItBorder,fill=\PostItCoul!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+	\path[line width=\PostItBorder,draw=\PostItCoul!50!black,shorten <=-0.05mm,shorten >=-0.05mm,color=\PostItCoul!50!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+}
+
+%------Gestion du trombone
+\NewDocumentCommand\TrombonePostIt{ }{%
+	\begin{scope}[shift={([xshift={-1cm+\PostItDeclClip}]frame.north east)},rotate=-15,scale={\PostItCoulScaleClip*0.55},line cap=round]
+		\draw[line width=0.81mm,draw=\PostItCoulClip!66] (0,0) --++ (0,0.0) arc (180:0:3.5mm) --++ (0,-1.75) arc (0:-180:3mm) --++ (0,1.25) ;
+		\draw[line width=0.27mm,draw=\PostItCoulClip!33] (0,0) --++ (0,0.0) arc (180:0:3.5mm) --++ (0,-1.75) arc (0:-180:3mm) --++ (0,1.25) ;
+	\end{scope}
+}
+
+%------Gestion de la punaise
+\NewDocumentCommand\EpinglePostIt{ }{%
+	\begin{scope}[shift={([xshift=\PostItDeclClip,yshift=-0.5cm]frame.north)},scale={\PostItCoulScaleClip*0.55},rotate=-40]
+	\begin{scope}[rotate=-35]
+			\draw[blue!10!gray,line cap=round,line width=2pt] (0,0) -- ++(90:0.85);
+			\fill[blue!10!gray,scale=0.5] (90:0.85) ellipse (.65cm and .3cm) ;
+			\fill[blue!10!gray,scale=0.5] (90:0.85) ++(0,0.4) ellipse (.2 and .4);
+			\fill[blue!10!gray,scale=0.5] (90:0.85) ++(0,0.8) ellipse (.4 and .3);
+		\end{scope}
+		\draw[line cap=round,line width=2pt] (0,0) -- ++(90:0.85);
+		\fill[ball color=\PostItCoulClip!66,scale=0.5] (90:0.85) ellipse (.65cm and .3cm) ;
+		\fill[ball color=\PostItCoulClip!66,scale=0.5] (90:0.85) ++(0,0.4) ellipse (.2 and .4);
+		\fill[ball color=\PostItCoulClip!66,scale=0.5] (90:0.85) ++(0,0.8) ellipse (.4 and .3);
+		
+	\end{scope}
+}
+
+%------Environnement principal
+\NewDocumentEnvironment{PostIt}{ O{} D<>{} }%
+{%
+	\restoreKV[postit]%
+	\setKV[postit]{#1}%
+	%choix de la déco et paramètrage
+	\def\CommandeDecoration{\EpinglePostIt}%
+	\def\MarginOffsetV{4mm}%
+	\IfStrEq{\PostItDeco}{Trombone}%
+		{\def\CommandeDecoration{\TrombonePostIt}\def\MarginOffsetV{0mm}}%
+		{}%
+	\IfStrEq{\PostItDeco}{Non}%
+		{\def\CommandeDecoration{}\def\MarginOffsetV{0mm}}%
+		{}%
+	%cas de la bordure
+	\ifboolKV[postit]{Bordure}%
+		{%
+			\def\PostItBorder{0.1mm}%
+			\tcbset{bordure/.style={}}%
+		}%
+		{%
+			\def\PostItBorder{0mm}%
+			\tcbset{bordure/.style={frame hidden}}%
+		}%
+	%cas du coin
+	\ifboolKV[postit]{Coin}%
+		{%
+			\tcbset{coincoin/.style={rounded corners=southeast,arc is angular,arc=3mm,underlay={\CoinPostIt}}}%
+		}%
+		{%
+			\tcbset{coincoin/.style={}}%
+		}%
+	%en fonction de hauteur auto ou non
+	\IfStrEq{\PostItHauteur}{auto}%
+		{%
+			\ifboolKV[postit]{Ombre}%
+				{\begin{tcolorbox}[testpostit,#2,bordure,coincoin,drop fuzzy shadow,top={2mm+\MarginOffsetV}]}%
+				{\begin{tcolorbox}[testpostit,#2,bordure,coincoin,top={2mm+\MarginOffsetV}]}%
+		}%
+		{%
+			\ifboolKV[postit]{Ombre}%
+				{\begin{tcolorbox}[testpostit,#2,bordure,coincoin,drop fuzzy shadow,height=\PostItHauteur,top={2mm+\MarginOffsetV}]}%
+				{\begin{tcolorbox}[testpostit,#2,bordure,coincoin,height=\PostItHauteur,top={2mm+\MarginOffsetV}]}%
+		}%
+}%
+{%
+	\end{tcolorbox}%
+}
+
+%------Style principal minitcbox
+\tcbset{testminipostit/.style={%
+	enhanced,size=small,boxrule=0.1mm,sharp corners,boxsep=0.5mm,%
+	left=0mm,right=2.5mm,top=0mm,bottom=0mm,nobeforeafter,box align=base
+	}%
+}
+%------Style principal minitcbox
+\tcbset{ombreminipostit/.style={%
+	fuzzy shadow={0.5mm}{-0.5mm}{0mm}{0.1mm}{black!50!white}
+	}%
+}
+
+\NewTCBox{\MiniPostIt}{ s O{yellow} }{%
+	testminipostit,colback=#2!50,colframe=#2!50!black,rounded corners=southeast,arc is angular,arc=2mm,%
+	underlay={
+		\path[line width=0.1mm,fill=#2!80!black] ([yshift=2mm]interior.south east)--++(-0.25,-0.1)--++(0.05,-0.1);
+		\path[line width=0.1mm,draw=#2!50!black,shorten <=-0.05mm,shorten >=-0.05mm,color=#2!50!black] ([yshift=2mm]interior.south east)--++(-0.25,-0.1)--++(0.05,-0.1);
+	},%
+	IfBooleanTF={#1}{ombreminipostit}{}
+}
+
+\endinput

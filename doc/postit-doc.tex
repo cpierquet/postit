@@ -1,0 +1,418 @@
+% !TeX TXS-program:compile = txs:///arara
+% arara: pdflatex: {shell: yes, synctex: no, interaction: batchmode}
+% arara: pdflatex: {shell: yes, synctex: no, interaction: batchmode} if found('log', '(undefined references|Please rerun|Rerun to get)')
+
+\documentclass[french,a4paper,11pt]{article}
+\usepackage[margin=2cm,includefoot]{geometry}
+\def\TPversion{0.1}
+\def\TPdate{31 Mai 2023}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{postit}
+\usepackage{awesomebox}
+\usepackage{fontawesome5}
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\usepackage{enumitem}
+\usepackage{tabularray}
+\usepackage{wrapstuff}
+\usepackage{lipsum}
+\usepackage{fancyvrb}
+\usepackage{fancyhdr}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\lfoot{\sffamily\small [postit]}
+\cfoot{\sffamily\small - \thepage{} -}
+\rfoot{\hyperlink{matoc}{\small\faArrowAltCircleUp[regular]}}
+
+%\usepackage{hvlogos}
+\usepackage{hologo}
+\providecommand\tikzlogo{Ti\textit{k}Z}
+\providecommand\TeXLive{\TeX{}Live\xspace}
+\providecommand\PSTricks{\textsf{PSTricks}\xspace}
+\let\pstricks\PSTricks
+\let\TikZ\tikzlogo
+\newcommand\TableauDocumentation{%
+	\begin{tblr}{width=\linewidth,colspec={X[c]X[c]X[c]X[c]X[c]X[c]},cells={font=\sffamily}}
+		{\LARGE \LaTeX} & & & & &\\
+		& {\LARGE \hologo{pdfLaTeX}} & & & & \\
+		& & {\LARGE \hologo{LuaLaTeX}} & & & \\
+		& & & {\LARGE \TikZ} & & \\
+		& & & & {\LARGE \TeXLive} & \\
+		& & & & & {\LARGE \hologo{MiKTeX}} \\
+	\end{tblr}
+}
+
+\usepackage{hyperref}
+\urlstyle{same}
+\hypersetup{pdfborder=0 0 0}
+\setlength{\parindent}{0pt}
+\definecolor{LightGray}{gray}{0.9}
+
+\usepackage{babel}
+\AddThinSpaceBeforeFootnotes
+\FrenchFootnotes
+
+\tcbuselibrary{listingsutf8}
+\newtcblisting{DemoCode}[1][]{%
+	enhanced,width=0.95\linewidth,center,%
+	bicolor,size=title,%
+	colback=cyan!2!white,%
+	colbacklower=cyan!1!white,%
+	colframe=cyan!75!black,%
+	listing options={%
+		breaklines=true,%
+		breakatwhitespace=true,%
+		style=tcblatex,basicstyle=\small\ttfamily,%
+		tabsize=4,%
+		commentstyle={\itshape\color{gray}},
+		keywordstyle={\color{blue}},%
+		classoffset=0,%
+		keywords={},%
+		alsoletter={-},%
+		keywordstyle={\color{blue}},%
+		classoffset=1,%
+		alsoletter={-},%
+		morekeywords={center,right,justify,left,\lipsum},%
+		keywordstyle={\color{violet}},%
+		classoffset=2,%
+		alsoletter={-},%
+		morekeywords={PostIt,\MiniPostIt},%
+		keywordstyle={\color{green!50!black}},%
+		classoffset=3,%
+		morekeywords={Couleur,CouleurAttache,Attache,Largeur,Hauteur,Inclinaison,Ombre,Coin,DecalAttache,AlignementH,AlignementV,AlignementPostIt,Bordure},%
+		keywordstyle={\color{orange}}
+	},%
+	#1
+}
+
+\tcbset{vignettes/.style={%
+	nobeforeafter,box align=base,boxsep=0pt,enhanced,sharp corners=all,rounded corners=southeast,%
+	boxrule=0.75pt,left=7pt,right=1pt,top=0pt,bottom=0.25pt,%
+	}
+}
+
+\tcbset{vignetteMaJ/.style={%
+	fontupper={\vphantom{pf}\footnotesize\ttfamily},
+	vignettes,colframe=purple!50!black,coltitle=white,colback=purple!10,%
+	overlay={\begin{tcbclipinterior}%
+			\fill[fill=purple!75]($(interior.south west)$) rectangle node[rotate=90]{\tiny \sffamily{\textcolor{black}{\scalebox{0.66}[0.66]{\textbf{MàJ}}}}} ($(interior.north west)+(5pt,0pt)$);%
+	\end{tcbclipinterior}}
+	}
+}
+
+\newcommand\Cle[1]{{\bfseries\sffamily\textlangle #1\textrangle}}
+\newcommand\cmaj[1]{\tcbox[vignetteMaJ]{#1}\xspace}
+
+\begin{document}
+
+\setlength{\aweboxleftmargin}{0.07\linewidth}
+\setlength{\aweboxcontentwidth}{0.93\linewidth}
+\setlength{\aweboxvskip}{8pt}
+
+\pagestyle{fancy}
+
+\thispagestyle{empty}
+
+\vspace{2cm}
+
+\begin{center}
+	\begin{minipage}{0.75\linewidth}
+	\begin{tcolorbox}[colframe=yellow,colback=yellow!15]
+		\begin{center}
+			\begin{tabular}{c}
+				{\Huge \texttt{postit}}\\
+				\\
+				{\LARGE Des petits Post-It,} \\
+				\\
+				{\LARGE avec \textsf{tcolorbox}.} \\
+			\end{tabular}
+			
+			\bigskip
+			
+			{\small \texttt{Version \TPversion{} -- \TPdate}}
+		\end{center}
+	\end{tcolorbox}
+\end{minipage}
+\end{center}
+
+\begin{center}
+	\begin{tabular}{c}
+	\texttt{Cédric Pierquet}\\
+	{\ttfamily c pierquet -- at -- outlook . fr}\\
+	\texttt{\url{https://github.com/cpierquet/postit}}
+\end{tabular}
+\end{center}
+
+\vspace{0.25cm}
+
+{$\blacktriangleright$~~Placer et personnaliser des Post-It ou des \textit{mini-}Post-It.}
+
+\vspace{0.25cm}
+
+{$\blacktriangleright$~~Gestion de la taille, de l'inclinaison, de la décoration.}
+
+\vspace{1cm}
+
+\begin{PostIt}<center>
+	Ceci est un petit Post-It ! Pour rappeler par exemple que \[(a+b)^2=a^2+2ab+b^2.\]
+\end{PostIt}
+
+\begin{PostIt}[Largeur=8cm,Couleur=orange,Attache=Non,Inclinaison=-5,Coin,AlignementPostIt=center]
+\lipsum[1][1-4]
+\end{PostIt}
+\hfill
+\begin{PostIt}[Hauteur=6cm,AlignementV=center,Couleur=pink,Attache=Trombone,CouleurAttache=blue,Inclinaison=15,Coin,AlignementPostIt=center]
+\lipsum[1][1-4]
+\end{PostIt}
+
+\vspace{0.5cm}
+
+%\hfill{}\textit{Merci à Denis Bitouzé et à Gilles Le Bourhis pour leurs retours et idées !}
+
+\smallskip
+
+\vfill
+
+\hrule
+
+\medskip
+
+\TableauDocumentation
+
+\medskip
+
+\hrule
+
+\medskip
+
+\newpage
+
+\phantomsection
+\hypertarget{matoc}{}
+
+\tableofcontents
+
+\vfill
+
+\section{Historique}
+
+\verb|v0.1.0|~:~~~~Version initiale.
+
+\newpage
+
+\section{Le package postit}
+
+\subsection{Introduction}
+
+\begin{noteblock}
+Le package propose de quoi afficher, dans son document \LaTeX, un Post-It (créé à l'aide de \texttt{tcolorbox}), avec la possibilité :
+
+\begin{itemize}
+	\item de spécifier les dimensions, la couleur ;
+	\item de rajouter une \textit{attache} comme un trombone ou une punaise ;
+	\item de personnaliser les bordure et le coin.
+\end{itemize}
+
+Le package propose également de quoi créer un \textit{mini-}Post-It (créé à l'aide d'une \texttt{tcbox}), avec la possibilité de gérer la couleur et l'ombre.
+\end{noteblock}
+
+\subsection{Chargement du package, packages utilisés}
+
+\begin{importantblock}
+Le package se charge, de manière classique, dans le préambule.
+
+Il n'existe pas d'option pour le package, et \texttt{xcolor} n'est pas chargé.
+\end{importantblock}
+
+\begin{DemoCode}[listing only]
+\documentclass{article}
+\usepackage{postit}
+
+\end{DemoCode}
+
+\begin{noteblock}
+\textsf{postit} charge les packages suivantes :
+
+\begin{itemize}
+	\item \texttt{tcolorbox} avec la librairie \texttt{\textit{tcbox}.skins} ;
+	\item \texttt{xstring} et \texttt{simplekv}.
+\end{itemize}
+
+Il est compatible avec les compilations usuelles en \textsf{latex}, \textsf{pdflatex}, \textsf{lualatex} ou \textsf{xelatex}.
+\end{noteblock}
+
+\subsection{Compatibilité}
+
+\begin{cautionblock}
+Si un autre package charge \texttt{tcolorbox}, et notamment avec l'option \Cle{[most]}, il vaut mieux charger \texttt{postit} après, afin d'éviter un \textsf{option clash error\ldots}.
+\end{cautionblock}
+
+\begin{DemoCode}[listing only]
+\documentclass{article}
+\usepackage[<librairies>]{tcolorbox}
+\usepackage{postit}
+...
+
+\end{DemoCode}
+
+\vfill~
+
+\pagebreak
+
+\section{Environnement Post-It}
+
+\subsection{Environnement et fonctionnement global}
+
+\begin{cautionblock}
+L'environnement dédié à la création du Post-It est \texttt{PostIt}.
+
+Il fonctionne avec un système de clés, entre \texttt{[...]} et il est possible, entre \texttt{<...>} de spécifier des options à la \textsf{tcbox}, en langage \textsf{tcbox} !
+\end{cautionblock}
+
+\begin{DemoCode}[listing only]
+\begin{PostIt}[clés]<options tcbox>
+...
+...
+\end{PostIt}
+\end{DemoCode}
+
+\begin{noteblock}
+Comme indiqué dans l'introduction, le Post-It est créé à l'aide d'un environnement \textsf{tcbox}.
+
+La majorité des (multiples) paramètres d'une \textsf{tcbox} sont fixés par le code, mais il est possible de spécifier certaines caractéristiques esthétiques du Post-It !
+\end{noteblock}
+
+\begin{DemoCode}[]
+%sortie par défaut, avec un paragraphe issu du package lipsum
+\begin{PostIt}
+\lipsum[1][1-2]
+\end{PostIt}
+\end{DemoCode}
+
+\begin{tipblock}
+Les éventuelles couleurs choisies devront être données de manière \textit{unique}, sans utiliser les \textit{mélanges} (avec \texttt{CouleurA!...!CouleurB}) que propose le package \texttt{xcolor}. 
+
+Toutefois, toute couleur précédemment définie pourra être utilisée pour le Post-It.
+\end{tipblock}
+
+\begin{tipblock}
+Le Post-It créé pourra être intégré dans une \textsf{minipage} ou un \textsf{wrapstuff} si besoin.
+
+Pour l'alignement horizontal, il est conseillé d'utiliser des commandes dédiées comme \texttt{\textbackslash hfill} ou des envrionnements dédiées comme \texttt{flush...}.
+\end{tipblock}
+
+\subsection{Clés et options}
+
+\begin{tipblock}
+Le premier argument, optionnel et entre \texttt{[...]}, propose les \Cle{clés} suivantes :
+
+\begin{itemize}
+	\item \Cle{Largeur} : largeur du Post-It  ; \hfill{}défaut : \Cle{6cm}
+	\item \Cle{Couleur} : couleur du Post-It (la bordure sera plus foncée) ; \hfill{}défaut : \Cle{yellow}
+	\item \Cle{Hauteur} : hauteur du Post-It (par défaut elle est \textit{automatique}) ; \hfill{}défaut : \Cle{auto}
+	\item \Cle{Inclinaison} : inclinaison du Post-It ; \hfill{}défaut : \Cle{0}
+	\item \Cle{Ombre} : booléen pour afficher une ombre portée ; \hfill{}défaut : \Cle{true}
+	\item \Cle{Bordure} : booléen pour afficher une fine bordure ; \hfill{}défaut : \Cle{true}
+	\item \Cle{Coin} : booléen pour afficher un coin corné ; \hfill{}défaut : \Cle{false}
+	\item \Cle{Attache} : choix de la décoration, parmi \Cle{Trombone / Punaise / Non} ;
+	
+	\hfill{}défaut : \Cle{Punaise}
+	\item \Cle{CouleurAttache} : couleur de l'attache ; \hfill{}défaut : \Cle{red}
+	\item \Cle{DecalAttache} : décalage horizontal de l'attache par rapport à sa position initiale (au centre pour la punaise, à 1~cm du bord droit pour le trombone) ;
+	
+	\hfill{}défaut : \Cle{0cm}
+	\item \Cle{AlignementV} : gère l'alignement vertical dans le Post-It (parmi \Cle{top/center/bottom}) ;
+	
+	\hfill{}défaut : \Cle{top}
+	\item \Cle{AlignementH} : gère l'alignement horizontal dans le Post-It (parmi \Cle{left/center/right/justify}) ;
+	
+	\hfill{}défaut : \Cle{justify}
+	\item \Cle{AlignementPostIt} : gère l'alignement vertical global du Post-It (parmi \Cle{top/center/bottom}).
+	
+	\hfill{}défaut : \Cle{bottom}
+\end{itemize}
+\vspace*{-\baselineskip}\leavevmode
+\end{tipblock}
+
+\begin{tipblock}
+Le second argument, optionnel et entre \texttt{<...>} correspond à des options spécifiques à passer à la \textsf{tcolorbox}, en langage \textsf{tcbox}.
+
+Elles permettent de modifier localement des options non paramétrées par des clés présentées précédemment.
+\end{tipblock}
+
+\begin{DemoCode}[]
+\begin{PostIt}
+	[Couleur=cyan,Attache=Trombone,Largeur=10cm,Inclinaison=10]<center,right=1.5cm>
+\lipsum[1][1-3]
+\end{PostIt}
+\end{DemoCode}
+
+\pagebreak
+
+\subsection{Exemples}
+
+\begin{DemoCode}[]
+%usepackage{wrapstuff}
+\begin{wrapstuff}[r,top=1]
+\begin{PostIt}[Inclinaison=5,Coin,Couleur=pink,CouleurAttache=blue,Bordure=false]
+\lipsum[1][1-2]
+\end{PostIt}
+\end{wrapstuff}
+
+\lipsum[1]
+\end{DemoCode}
+
+\begin{DemoCode}[]
+Un petit Post-It aligné à droite, et centré verticalement :
+%
+\hfill\begin{PostIt}[Inclinaison=-10,Couleur=orange,Largeur=5cm,Hauteur=5cm, AlignementV=center,Coin,CouleurAttache=yellow, DecalAttache=-1cm,AlignementPostIt=center]
+
+\textsf{\small\lipsum[1][1-2]}
+\[\mathsf{\displaystyle\sum_{k=1}^{n} k = \dfrac{n(n+1)}{2}}\]
+
+\end{PostIt}
+\end{DemoCode}
+
+\vfill~
+
+\pagebreak
+
+\section{Post-It simple, en ligne}
+
+\subsection{Commande et fonctionnement global}
+
+\begin{cautionblock}
+La commande dédiée à la création du \textit{mini-}Post-It est \texttt{MiniPostIt}.
+
+Elle fonctionne sous forme autonome, avec uniquement la couleur en \Cle{option}.
+
+\smallskip
+
+Cette fois-ci le \textit{mini-} Post-It est créé à l'aide d'une commande \textsf{tcbox}.
+\end{cautionblock}
+
+\begin{DemoCode}[listing only]
+\MiniPostIt(*)[couleur]{contenu}
+\end{DemoCode}
+
+\subsection{Arguments}
+
+\begin{noteblock}
+La version étoilée active l'ombre du \textit{mini-}Post-It.
+
+La couleur (\Cle{yellow}), est gérée par l'argument optionnel entre \texttt{[...]}.
+\end{noteblock}
+
+\subsection{Exemples}
+
+\begin{DemoCode}[]
+On va travailler sur une équation diophantienne du type $ax+by=c$.
+
+On va utiliser le \MiniPostIt*[orange]{théorème de Bezout} puis le \MiniPostIt{théorème de Gauss}.
+
+Le schéma de résolution est classique, et assez simple à appréhender !
+\end{DemoCode}
+
+\end{document}
