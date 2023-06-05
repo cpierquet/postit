@@ -4,8 +4,8 @@
 
 \documentclass[french,a4paper,11pt]{article}
 \usepackage[margin=2cm,includefoot]{geometry}
-\def\TPversion{0.1}
-\def\TPdate{31 Mai 2023}
+\def\TPversion{0.1.1}
+\def\TPdate{5 juin 2023}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb}
@@ -54,6 +54,12 @@
 \AddThinSpaceBeforeFootnotes
 \FrenchFootnotes
 
+\usepackage{listings}
+
+\usepackage{newverbs}
+\newverbcommand{\motcletex}{\color{cyan!75!black}}{}
+\newverbcommand{\packagetex}{\color{violet!75!black}}{}
+
 \tcbuselibrary{listingsutf8}
 \newtcblisting{DemoCode}[1][]{%
 	enhanced,width=0.95\linewidth,center,%
@@ -81,7 +87,7 @@
 		morekeywords={PostIt,\MiniPostIt},%
 		keywordstyle={\color{green!50!black}},%
 		classoffset=3,%
-		morekeywords={Couleur,CouleurAttache,Attache,Largeur,Hauteur,Inclinaison,Ombre,Coin,DecalAttache,AlignementH,AlignementV,AlignementPostIt,Bordure},%
+		morekeywords={Couleur,CouleurAttache,Attache,Largeur,Hauteur,Inclinaison,Ombre,Coin,DecalAttache,AlignementH,AlignementV,AlignementPostIt,Bordure,ExtraMargeDroite,Rendu,Titre,PoliceTitre},%
 		keywordstyle={\color{orange}}
 	},%
 	#1
@@ -102,7 +108,7 @@
 	}
 }
 
-\newcommand\Cle[1]{{\bfseries\sffamily\textlangle #1\textrangle}}
+\newcommand\Cle[1]{{\small\sffamily\textlangle \textcolor{orange}{#1}\textrangle}}
 \newcommand\cmaj[1]{\tcbox[vignetteMaJ]{#1}\xspace}
 
 \begin{document}
@@ -126,7 +132,7 @@
 				\\
 				{\LARGE Des petits Post-It,} \\
 				\\
-				{\LARGE avec \textsf{tcolorbox}.} \\
+				{\LARGE avec \textsf{tcolorbox} ou \textsf{Ti\textit{k}Z}.} \\
 			\end{tabular}
 			
 			\bigskip
@@ -159,11 +165,11 @@
 	Ceci est un petit Post-It ! Pour rappeler par exemple que \[(a+b)^2=a^2+2ab+b^2.\]
 \end{PostIt}
 
-\begin{PostIt}[Largeur=8cm,Couleur=orange,Attache=Non,Inclinaison=-5,Coin,AlignementPostIt=center]
+\begin{PostIt}[Rendu=tikz,Largeur=8cm,Couleur=orange,Attache=Trombone,CouleurAttache=blue,Inclinaison=-5,AlignementPostIt=center,Titre={- Titre -},PoliceTitre={\color{blue!50!black}\bfseries\small\sffamily}]
 \lipsum[1][1-4]
 \end{PostIt}
 \hfill
-\begin{PostIt}[Hauteur=6cm,AlignementV=center,Couleur=pink,Attache=Trombone,CouleurAttache=blue,Inclinaison=15,Coin,AlignementPostIt=center]
+\begin{PostIt}[Hauteur=6cm,AlignementV=center,Couleur=pink,Attache=Non,CouleurAttache=blue,Inclinaison=15,Coin,AlignementPostIt=center,Attache=Scotch]
 \lipsum[1][1-4]
 \end{PostIt}
 
@@ -198,6 +204,10 @@
 
 \section{Historique}
 
+\verb|v0.1.1|~:~~~~Ajout d'un \motcletex!\vphantom! pour les \textit{mini-}Post-It (hauteur \textit{uniforme}) + Correction de bugs.
+
+\verb|      |~:~~~~Moteurs de rendu alternatif en \TikZ{} + Ajout d'un titre éventuel .
+
 \verb|v0.1.0|~:~~~~Version initiale.
 
 \newpage
@@ -207,7 +217,7 @@
 \subsection{Introduction}
 
 \begin{noteblock}
-Le package propose de quoi afficher, dans son document \LaTeX, un Post-It (créé à l'aide de \texttt{tcolorbox}), avec la possibilité :
+Le package propose de quoi afficher, dans son document \LaTeX, un Post-It (créé à l'aide de \packagetex!tcolorbox! ou de \packagetex!tikz!), avec la possibilité :
 
 \begin{itemize}
 	\item de spécifier les dimensions, la couleur ;
@@ -215,7 +225,7 @@ Le package propose de quoi afficher, dans son document \LaTeX, un Post-It (cré�
 	\item de personnaliser les bordure et le coin.
 \end{itemize}
 
-Le package propose également de quoi créer un \textit{mini-}Post-It (créé à l'aide d'une \texttt{tcbox}), avec la possibilité de gérer la couleur et l'ombre.
+Le package propose également de quoi créer un \textit{mini-}Post-It (créé à l'aide d'une \motcletex!tcbox!), avec la possibilité de gérer la couleur et l'ombre.
 \end{noteblock}
 
 \subsection{Chargement du package, packages utilisés}
@@ -223,7 +233,7 @@ Le package propose également de quoi créer un \textit{mini-}Post-It (créé à
 \begin{importantblock}
 Le package se charge, de manière classique, dans le préambule.
 
-Il n'existe pas d'option pour le package, et \texttt{xcolor} n'est pas chargé.
+Il n'existe pas d'option pour le package, et \packagetex!xcolor! n'est pas chargé.
 \end{importantblock}
 
 \begin{DemoCode}[listing only]
@@ -233,11 +243,17 @@ Il n'existe pas d'option pour le package, et \texttt{xcolor} n'est pas chargé.
 \end{DemoCode}
 
 \begin{noteblock}
-\textsf{postit} charge les packages suivantes :
+\packagetex!postit! charge les packages suivantes :
 
 \begin{itemize}
-	\item \texttt{tcolorbox} avec la librairie \texttt{\textit{tcbox}.skins} ;
-	\item \texttt{xstring} et \texttt{simplekv}.
+	\item \packagetex!tcolorbox! avec la librairie \packagetex!tcbox.skins! ;
+	\item les librairies \packagetex!tikz! :
+	\begin{itemize}
+		\item \packagetex!tikz.calc! ;
+		\item \packagetex!tikz.decorations! ;
+		\item \packagetex!tikz.decorations.pathmorphing! ;
+	\end{itemize}
+	\item \packagetex!settobox!, \packagetex!xstring! et \packagetex!simplekv!.
 \end{itemize}
 
 Il est compatible avec les compilations usuelles en \textsf{latex}, \textsf{pdflatex}, \textsf{lualatex} ou \textsf{xelatex}.
@@ -246,7 +262,7 @@ Il est compatible avec les compilations usuelles en \textsf{latex}, \textsf{pdfl
 \subsection{Compatibilité}
 
 \begin{cautionblock}
-Si un autre package charge \texttt{tcolorbox}, et notamment avec l'option \Cle{[most]}, il vaut mieux charger \texttt{postit} après, afin d'éviter un \textsf{option clash error\ldots}.
+Si un autre package charge \packagetex!tcolorbox!, et notamment avec l'option \Cle{[most]}, il vaut mieux charger \packagetex!postit! après, afin d'éviter un \motcletex!option clash error...!.
 \end{cautionblock}
 
 \begin{DemoCode}[listing only]
@@ -266,9 +282,9 @@ Si un autre package charge \texttt{tcolorbox}, et notamment avec l'option \Cle{[
 \subsection{Environnement et fonctionnement global}
 
 \begin{cautionblock}
-L'environnement dédié à la création du Post-It est \texttt{PostIt}.
+L'environnement dédié à la création du Post-It est \packagetex!PostIt!.
 
-Il fonctionne avec un système de clés, entre \texttt{[...]} et il est possible, entre \texttt{<...>} de spécifier des options à la \textsf{tcbox}, en langage \textsf{tcbox} !
+Il fonctionne avec un système de clés, entre \texttt{[...]} et il est possible, entre \texttt{<...>} de spécifier des options à la \motcletex!tcbox!, en langage \textsf{tcbox} (inutile avec le rendu en \motcletex!tikz!) !
 \end{cautionblock}
 
 \begin{DemoCode}[listing only]
@@ -279,29 +295,44 @@ Il fonctionne avec un système de clés, entre \texttt{[...]} et il est possible
 \end{DemoCode}
 
 \begin{noteblock}
-Comme indiqué dans l'introduction, le Post-It est créé à l'aide d'un environnement \textsf{tcbox}.
+Comme indiqué dans l'introduction, le Post-It est créé à l'aide d'un environnement \motcletex!tcbox! ou d'un environnement \motcletex!tikz!.
 
-La majorité des (multiples) paramètres d'une \textsf{tcbox} sont fixés par le code, mais il est possible de spécifier certaines caractéristiques esthétiques du Post-It !
+La majorité des (multiples) paramètres d'une \motcletex!tcbox! et d'une figuure \motcletex!tikz! sont fixés par le code, mais il est possible de spécifier certaines caractéristiques esthétiques du Post-It !
 \end{noteblock}
 
 \begin{DemoCode}[]
-%sortie par défaut, avec un paragraphe issu du package lipsum
+%sortie par défaut (rendu tcbox), avec un paragraphe issu du package lipsum
 \begin{PostIt}
 \lipsum[1][1-2]
 \end{PostIt}
 \end{DemoCode}
 
+\begin{DemoCode}[]
+%sortie rendu tikz, avec un paragraphe issu du package lipsum
+\begin{PostIt}[Rendu=tikz]
+	\lipsum[1][1-2]
+\end{PostIt}
+%sortie rendu tikzv2, avec un paragraphe issu du package lipsum
+\begin{PostIt}[Rendu=tikzv2]
+	\lipsum[1][1-2]
+\end{PostIt}
+\end{DemoCode}
+
 \begin{tipblock}
-Les éventuelles couleurs choisies devront être données de manière \textit{unique}, sans utiliser les \textit{mélanges} (avec \texttt{CouleurA!...!CouleurB}) que propose le package \texttt{xcolor}. 
+Les éventuelles couleurs choisies devront être données de manière \textit{unique}, sans utiliser les \textit{mélanges} (avec \motcletex|CouleurA!...!CouleurB|) que propose le package \packagetex!xcolor!. 
 
 Toutefois, toute couleur précédemment définie pourra être utilisée pour le Post-It.
 \end{tipblock}
 
 \begin{tipblock}
-Le Post-It créé pourra être intégré dans une \textsf{minipage} ou un \textsf{wrapstuff} si besoin.
+Le Post-It créé pourra être intégré dans une \motcletex!minipage! ou un \motcletex!wrapstuff! si besoin.
 
-Pour l'alignement horizontal, il est conseillé d'utiliser des commandes dédiées comme \texttt{\textbackslash hfill} ou des envrionnements dédiées comme \texttt{flush...}.
+Pour l'alignement horizontal, il est conseillé d'utiliser des commandes dédiées comme \motcletex!\hfill! ou des environnements dédiés comme \motcletex!flush...!.
 \end{tipblock}
+
+\begin{warningblock}
+Avec une \textit{attache} qui "déborde" verticalement (rendu \textsf{tcbox}), il sera sans doute nécessaire d'ajuster l'espacement vertical précédant le Post-It pour éviter un éventuel chevauchement.
+\end{warningblock}
 
 \subsection{Clés et options}
 
@@ -309,9 +340,12 @@ Pour l'alignement horizontal, il est conseillé d'utiliser des commandes dédié
 Le premier argument, optionnel et entre \texttt{[...]}, propose les \Cle{clés} suivantes :
 
 \begin{itemize}
-	\item \Cle{Largeur} : largeur du Post-It  ; \hfill{}défaut : \Cle{6cm}
+	\item \Cle{Largeur} : largeur (en cm) du Post-It  ; \hfill{}défaut : \Cle{6cm}
 	\item \Cle{Couleur} : couleur du Post-It (la bordure sera plus foncée) ; \hfill{}défaut : \Cle{yellow}
-	\item \Cle{Hauteur} : hauteur du Post-It (par défaut elle est \textit{automatique}) ; \hfill{}défaut : \Cle{auto}
+	\item \Cle{Hauteur} : hauteur (en cm si déclarée) du Post-It (par défaut elle est \textit{automatique}) ;
+	
+	\hfill{}défaut : \Cle{auto}
+	\item \cmaj{0.1.1} \Cle{Rendu} : moteur du rendu parmi \Cle{tcbox / tikz / tikv2} ; \hfill{}défaut : \Cle{tcbox}
 	\item \Cle{Inclinaison} : inclinaison du Post-It ; \hfill{}défaut : \Cle{0}
 	\item \Cle{Ombre} : booléen pour afficher une ombre portée ; \hfill{}défaut : \Cle{true}
 	\item \Cle{Bordure} : booléen pour afficher une fine bordure ; \hfill{}défaut : \Cle{true}
@@ -320,7 +354,12 @@ Le premier argument, optionnel et entre \texttt{[...]}, propose les \Cle{clés} 
 	
 	\hfill{}défaut : \Cle{Punaise}
 	\item \Cle{CouleurAttache} : couleur de l'attache ; \hfill{}défaut : \Cle{red}
-	\item \Cle{DecalAttache} : décalage horizontal de l'attache par rapport à sa position initiale (au centre pour la punaise, à 1~cm du bord droit pour le trombone) ;
+	\item \Cle{DecalAttache} : décalage horizontal (sans unité, mais en cm) de l'attache par rapport à sa position initiale (au centre pour la punaise, à 1~cm du bord droit pour le trombone) ;
+	
+	\hfill{}défaut : \Cle{0}
+	\item \cmaj{0.1.1} \Cle{Titre} : rajouter un titre (en 1ère ligne et/ou sous l'Attache) ; \hfill{}défaut : \Cle{vide}
+	\item \cmaj{0.1.1} \Cle{PoliceTitre} : police du titre ; \hfill{}défaut : \Cle{\textbackslash normalfont\textbackslash normalfont}
+	\item \cmaj{0.1.1} \Cle{ExtraMargeDroite} : rajoute (en rendu \packagetex!tikz!, et en cm) une marge à droite ;
 	
 	\hfill{}défaut : \Cle{0cm}
 	\item \Cle{AlignementV} : gère l'alignement vertical dans le Post-It (parmi \Cle{top/center/bottom}) ;
@@ -337,16 +376,33 @@ Le premier argument, optionnel et entre \texttt{[...]}, propose les \Cle{clés} 
 \end{tipblock}
 
 \begin{tipblock}
-Le second argument, optionnel et entre \texttt{<...>} correspond à des options spécifiques à passer à la \textsf{tcolorbox}, en langage \textsf{tcbox}.
+Le second argument, optionnel et entre \texttt{<...>} correspond à des options spécifiques à passer à la \motcletex!tcolorbox!, en langage \textsf{tcbox} (inutile si le rendu est \motcletex!tikz!).
 
 Elles permettent de modifier localement des options non paramétrées par des clés présentées précédemment.
 \end{tipblock}
 
 \begin{DemoCode}[]
-\begin{PostIt}
+\begin{PostIt}%moteur de rendu tcbox (défaut)
 	[Couleur=cyan,Attache=Trombone,Largeur=10cm,Inclinaison=10]<center,right=1.5cm>
 \lipsum[1][1-3]
 \end{PostIt}
+\end{DemoCode}
+
+\begin{DemoCode}[]
+\hfill\begin{PostIt}%moteur de rendu tikz
+	[Rendu=tikz,Couleur=violet,Largeur=9cm,Inclinaison=-10,Attache=Trombone,
+	CouleurAttache=black,ExtraMargeDroite=1cm,Titre={Petit Titre},
+	PoliceTitre={\color{white}\bfseries\small\sffamily}]
+\lipsum[1][1-3]
+\end{PostIt}\hfill~
+\end{DemoCode}
+
+\begin{DemoCode}[]
+\hfill\begin{PostIt}%moteur de rendu tikzv2
+	[Rendu=tikzv2,Couleur=orange,Largeur=9cm,Inclinaison=-10,Attache=Scotch, 	Titre={Essai},
+	PoliceTitre={\color{blue!50!black}\bfseries\itshape\small\ttfamily}]
+\lipsum[1][1-3]
+\end{PostIt}\hfill~
 \end{DemoCode}
 
 \pagebreak
@@ -365,17 +421,48 @@ Elles permettent de modifier localement des options non paramétrées par des cl
 \end{DemoCode}
 
 \begin{DemoCode}[]
+%usepackage{wrapstuff}
+\begin{wrapstuff}[r,top=1]
+\begin{PostIt}[Inclinaison=5,Rendu=tikz,Couleur=pink, CouleurAttache=blue,Bordure=false]
+\lipsum[1][1-2]
+\end{PostIt}
+\end{wrapstuff}
+
+\lipsum[1]
+\end{DemoCode}
+
+\begin{DemoCode}[]
+%usepackage{wrapstuff}
+\begin{wrapstuff}[r,top=1]
+\begin{PostIt}[Inclinaison=5,Rendu=tikzv2,Attache=Scotch,Couleur=pink]
+\lipsum[1][1-2]
+\end{PostIt}
+\end{wrapstuff}
+
+\lipsum[1]
+\end{DemoCode}
+
+\begin{DemoCode}[]
 Un petit Post-It aligné à droite, et centré verticalement :
 %
-\hfill\begin{PostIt}[Inclinaison=-10,Couleur=orange,Largeur=5cm,Hauteur=5cm, AlignementV=center,Coin,CouleurAttache=yellow, DecalAttache=-1cm,AlignementPostIt=center]
+\hfill\begin{PostIt}[Inclinaison=-10,Couleur=orange,Largeur=5cm,Hauteur=5cm, AlignementV=center,Coin,CouleurAttache=yellow, DecalAttache=-1,AlignementPostIt=center]
 
 \textsf{\small\lipsum[1][1-2]}
 \[\mathsf{\displaystyle\sum_{k=1}^{n} k = \dfrac{n(n+1)}{2}}\]
-
 \end{PostIt}
 \end{DemoCode}
 
-\vfill~
+%\begin{DemoCode}[]
+%Un petit Post-It aligné à droite, et centré verticalement :
+%%
+%\hfill\begin{PostIt}[Inclinaison=-10,Couleur=orange,Largeur=5cm,Hauteur=5cm, AlignementV=center,Rendu=tikz,Attache=Non,AlignementPostIt=center]
+%
+%\textsf{\small\lipsum[1][1-2]}
+%\[\mathsf{\displaystyle\sum_{k=1}^{n} k = \dfrac{n(n+1)}{2}}\]
+%\end{PostIt}
+%\end{DemoCode}
+%
+%\vfill~
 
 \pagebreak
 
@@ -390,7 +477,11 @@ Elle fonctionne sous forme autonome, avec uniquement la couleur en \Cle{option}.
 
 \smallskip
 
-Cette fois-ci le \textit{mini-} Post-It est créé à l'aide d'une commande \textsf{tcbox}.
+Cette fois-ci le \textit{mini-} Post-It est créé à l'aide d'une commande \motcletex!tcbox!.
+
+\smallskip
+
+Les dimensions ne sont pas modifiables, et un \motcletex!\vphantom! est inséré au début de la \motcletex!tcbox! afin d'harmoniser la hauteur.
 \end{cautionblock}
 
 \begin{DemoCode}[listing only]
@@ -410,9 +501,149 @@ La couleur (\Cle{yellow}), est gérée par l'argument optionnel entre \texttt{[.
 \begin{DemoCode}[]
 On va travailler sur une équation diophantienne du type $ax+by=c$.
 
-On va utiliser le \MiniPostIt*[orange]{théorème de Bezout} puis le \MiniPostIt{théorème de Gauss}.
+On va utiliser le \MiniPostIt*[orange]{théorème de Bezout}, le \MiniPostIt{théorème de Gauss} sans oublier la \MiniPostIt*[cyan]{réciproque}.
 
 Le schéma de résolution est classique, et assez simple à appréhender !
 \end{DemoCode}
+
+\pagebreak
+
+\section{Résumé des styles}
+
+\subsection{Moteur de rendu tcbox}
+
+\begin{DemoCode}[text only]
+\hfill\begin{PostIt}
+\texttt{Ombre/Épingle/Bordure}
+\end{PostIt}
+\begin{PostIt}[Ombre=false]
+\texttt{Épingle/Bordure}
+\end{PostIt}\hfill~
+
+\medskip
+
+\hfill\begin{PostIt}[Bordure=false]
+\texttt{Ombre/Épingle}
+\end{PostIt}
+\begin{PostIt}[Bordure=false,Ombre=false]
+\texttt{Épingle}
+\end{PostIt}\hfill~
+
+\medskip
+
+\hfill\begin{PostIt}[Attache=Trombone]
+\texttt{Ombre/Trombone/Bordure}\\
+~
+\end{PostIt}
+\begin{PostIt}[Attache=Scotch]
+\texttt{Ombre/Scotch/Bordure}\\
+~
+\end{PostIt}\hfill~
+
+\medskip
+
+\hfill\begin{PostIt}[Attache=Non]
+\texttt{Ombre/Bordure}
+\end{PostIt}
+\begin{PostIt}[Coin,Attache=Non]
+\texttt{Ombre/Bordure/Coin}
+\end{PostIt}\hfill~
+
+\vspace{1cm}
+
+\hfill\begin{PostIt}[Titre={Lipsum[1][1-4]},PoliceTitre={\large\sffamily},Inclinaison=5,Couleur=pink,Hauteur=6cm,Attache=Scotch,AlignementV=center,Coin]
+\lipsum[1][1-4]
+\end{PostIt}\hfill~
+\end{DemoCode}
+
+\pagebreak
+
+\subsection{Moteur de rendu tikz}
+
+\begin{DemoCode}[text only]
+\hfill\begin{PostIt}[Rendu=tikz]
+\texttt{Ombre/Épingle/Bordure}
+\end{PostIt}
+\begin{PostIt}[Ombre=false,Rendu=tikz]
+\texttt{Épingle/Bordure}
+\end{PostIt}\hfill~
+
+\medskip
+
+\hfill\begin{PostIt}[Bordure=false,Rendu=tikz]
+\texttt{Ombre/Épingle}
+\end{PostIt}
+\begin{PostIt}[Bordure=false,Ombre=false,Rendu=tikz]
+\texttt{Épingle}
+\end{PostIt}\hfill~
+
+\medskip
+
+\hfill\begin{PostIt}[Attache=Trombone,Rendu=tikz]
+\texttt{Ombre/Trombone/Bordure}\\
+~
+\end{PostIt}
+\begin{PostIt}[Attache=Scotch,Rendu=tikz]
+\texttt{Ombre/Scotch/Bordure}\\
+~
+\end{PostIt}\hfill~
+
+\medskip
+
+\hfill\begin{PostIt}[Attache=Non,Rendu=tikz]
+\texttt{Ombre/Bordure}
+\end{PostIt}\hfill~
+
+\vspace{1cm}
+
+\hfill\begin{PostIt}[Rendu=tikz,Titre={Lipsum[1][1-4]},PoliceTitre={\large\sffamily},Inclinaison=5,Couleur=pink,Hauteur=6cm,Attache=Scotch,AlignementV=center,Coin]
+\lipsum[1][1-4]
+\end{PostIt}\hfill~
+\end{DemoCode}
+
+\subsection{Moteur de rendu tikzv2}
+
+\begin{DemoCode}[text only]
+\hfill\begin{PostIt}[Rendu=tikzv2]
+\texttt{Ombre/Épingle/Bordure}
+\end{PostIt}
+\begin{PostIt}[Ombre=false,Rendu=tikzv2]
+\texttt{Épingle/Bordure}
+\end{PostIt}\hfill~
+
+\medskip
+
+\hfill\begin{PostIt}[Bordure=false,Rendu=tikzv2]
+\texttt{Ombre/Épingle}
+\end{PostIt}
+\begin{PostIt}[Bordure=false,Ombre=false,Rendu=tikzv2]
+\texttt{Épingle}
+\end{PostIt}\hfill~
+
+\medskip
+
+\hfill\begin{PostIt}[Attache=Trombone,Rendu=tikzv2]
+\texttt{Ombre/Trombone/Bordure}\\
+~
+\end{PostIt}
+\begin{PostIt}[Attache=Scotch,Rendu=tikzv2]
+\texttt{Ombre/Scotch/Bordure}\\
+~
+\end{PostIt}\hfill~
+
+\medskip
+
+\hfill\begin{PostIt}[Attache=Non,Rendu=tikzv2]
+\texttt{Ombre/Bordure}
+\end{PostIt}\hfill~
+
+\vspace{1cm}
+
+\hfill\begin{PostIt}[Rendu=tikzv2,Titre={Lipsum[1][1-4]},PoliceTitre={\large\sffamily},Inclinaison=5,Couleur=pink,Hauteur=6cm,Attache=Scotch,AlignementV=center,Coin]
+\lipsum[1][1-4]
+\end{PostIt}\hfill~
+\end{DemoCode}
+
+
 
 \end{document}
